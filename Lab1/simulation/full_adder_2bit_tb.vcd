@@ -1,0 +1,109 @@
+$date
+  Thu Oct  7 15:04:48 2021
+$end
+$version
+  GHDL v0
+$end
+$timescale
+  1 fs
+$end
+$scope module standard $end
+$upscope $end
+$scope module textio $end
+$upscope $end
+$scope module std_logic_1164 $end
+$upscope $end
+$scope module env $end
+$upscope $end
+$scope module full_adder_2bit_tb $end
+$var reg 2 ! a[1:0] $end
+$var reg 2 " b[1:0] $end
+$var reg 1 # c_in $end
+$var reg 1 $ c_out $end
+$var reg 2 % sum[1:0] $end
+$scope module full_adder $end
+$var reg 2 & a[1:0] $end
+$var reg 2 ' b[1:0] $end
+$var reg 1 ( c_in $end
+$var reg 2 ) sum[1:0] $end
+$var reg 1 * c_out $end
+$var reg 3 + compare_result[2:0] $end
+$scope module carry_map $end
+$var reg 1 , cin $end
+$var reg 4 - select_in[3:0] $end
+$var reg 1 . y_cout $end
+$upscope $end
+$scope module s1map $end
+$var reg 1 / cin $end
+$var reg 4 0 select_in[3:0] $end
+$var reg 1 1 y_s1 $end
+$upscope $end
+$scope module s0map $end
+$var reg 1 2 cin $end
+$var reg 4 3 select_in[3:0] $end
+$var reg 1 4 y_s0 $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+b00 !
+b00 "
+0#
+0$
+bUU %
+b00 &
+b00 '
+0(
+bUU )
+0*
+bUUU +
+0,
+b0000 -
+0.
+0/
+b0000 0
+01
+02
+b0000 3
+04
+#20000000
+b10 !
+b01 "
+X$
+b10 &
+b01 '
+X*
+b1001 -
+X.
+b1001 0
+X1
+b1001 3
+X4
+#40000000
+b01 !
+b11 "
+b01 &
+b11 '
+X*
+b0111 -
+X.
+b0111 0
+X1
+b0111 3
+X4
+#60000000
+b01 "
+1#
+b01 '
+1(
+X*
+1,
+b0101 -
+X.
+1/
+b0101 0
+X1
+12
+b0101 3
+X4
