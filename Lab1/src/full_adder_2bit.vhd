@@ -92,13 +92,13 @@ BEGIN
     cin                   => C_in,
     select_in(3 DOWNTO 2) => A,
     select_in(1 DOWNTO 0) => B,
-    y_s1                  => C_out);
+    y_s1                  => Sum(1));
   -- port map the component for generating the S(0)                                    
   s0map : S0_mux PORT MAP(
     cin                   => C_in,
     select_in(3 DOWNTO 2) => A,
     select_in(1 DOWNTO 0) => B,
-    y_s0                  => C_out);
+    y_s0                  => Sum(0));
 
   compare_map : comparator PORT MAP(
     A       => UNSIGNED(A),
