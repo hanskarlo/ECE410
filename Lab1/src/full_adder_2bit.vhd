@@ -64,24 +64,14 @@ ARCHITECTURE Behavioral OF full_adder_2bit IS
       y_s0      : OUT STD_LOGIC);
   END COMPONENT;
 
-  COMPONENT comparator IS
-    PORT (
-      A       : IN UNSIGNED(1 DOWNTO 0);
-      B       : IN UNSIGNED(1 DOWNTO 0);
-      Greater : OUT STD_LOGIC;
-      Equal   : OUT STD_LOGIC;
-      Lesser  : OUT STD_LOGIC);
-  END COMPONENT;
-
 BEGIN
-
   -- PART 3....
   -- The "LD6" - RGB led on board is used as an indication if A>B or A<B or A=B. 
   -- Write 3 lines of conditional signal assignment code (say using "WHEN/ELSE")
   -- to turn the LED red when A>B, green when A<B and blue when A=B.
-  compare_result(2) <= '1' WHEN A > B;
-  compare_result(1) <= '1' WHEN A = B;
-  compare_result(0) <= '1' WHEN A < B;
+  compare_result(2) <= '1' WHEN A > B ELSE '0';
+  compare_result(1) <= '1' WHEN A = B ELSE '0';
+  compare_result(0) <= '1' WHEN A < B ELSE '0';
 
   -- port map the component for generating carry output                     
   carry_map : Co_mux PORT MAP(
@@ -96,18 +86,11 @@ BEGIN
     select_in(3 DOWNTO 2) => A,
     select_in(1 DOWNTO 0) => B,
     y_s1                  => Sum(1));
+
   -- port map the component for generating the S(0)                                    
   s0map : S0_mux PORT MAP(
     cin                   => C_in,
     select_in(3 DOWNTO 2) => A,
     select_in(1 DOWNTO 0) => B,
     y_s0                  => Sum(0));
-
-  compare_map : comparator PORT MAP(
-    A       => UNSIGNED(A),
-    B       => UNSIGNED(B),
-    Greater => compare_result(2),
-    Equal   => compare_result(1),
-    Lesser  => compare_result(0));
-
 END Behavioral;
