@@ -79,6 +79,9 @@ BEGIN
   -- The "LD6" - RGB led on board is used as an indication if A>B or A<B or A=B. 
   -- Write 3 lines of conditional signal assignment code (say using "WHEN/ELSE")
   -- to turn the LED red when A>B, green when A<B and blue when A=B.
+  compare_result(2) <= '1' WHEN A > B;
+  compare_result(1) <= '1' WHEN A = B;
+  compare_result(0) <= '1' WHEN A < B;
 
   -- port map the component for generating carry output                     
   carry_map : Co_mux PORT MAP(
