@@ -24,12 +24,12 @@ USE IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+USE IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+--LIBRARY UNISIM;
+--USE UNISIM.VComponents.ALL;
 
 ENTITY full_adder_2bit IS
   PORT (
@@ -64,6 +64,15 @@ ARCHITECTURE Behavioral OF full_adder_2bit IS
       y_s0      : OUT STD_LOGIC);
   END COMPONENT;
 
+  COMPONENT comparator IS
+    PORT (
+      A       : IN UNSIGNED(1 DOWNTO 0);
+      B       : IN UNSIGNED(1 DOWNTO 0);
+      Greater : OUT STD_LOGIC;
+      Equal   : OUT STD_LOGIC;
+      Lesser  : OUT STD_LOGIC);
+  END COMPONENT;
+
 BEGIN
 
   -- PART 3....
@@ -90,5 +99,12 @@ BEGIN
     select_in(3 DOWNTO 2) => A,
     select_in(1 DOWNTO 0) => B,
     y_s0                  => C_out);
+
+  compare_map : comparator PORT MAP(
+    A       => UNSIGNED(A),
+    B       => UNSIGNED(B),
+    Greater => compare_result(2),
+    Equal   => compare_result(1),
+    Lesser  => compare_result(0));
 
 END Behavioral;
