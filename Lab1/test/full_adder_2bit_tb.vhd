@@ -203,6 +203,7 @@ BEGIN
     ASSERT ((sum = "11") AND (c_out = '1') AND (compare_result = "010")) --If for A=11 AND B=11, IF S!=00 AND C!=0, then there is an error
     REPORT "Error for input A_in=00 and B_in=00" SEVERITY error;
     ----------------
+    WAIT FOR time_period;
 
     finish;
   END PROCESS;
