@@ -71,6 +71,7 @@ BEGIN
 
     -- You must include reasonable number of test cases to verify the working of your design.
 
+    -- Testing when B = 00
     ----------------
     A    <= "00";
     B    <= "00";
@@ -80,29 +81,129 @@ BEGIN
     REPORT "Error for input A_in=00 and B_in=00" SEVERITY error;
     ----------------
     ----------------
+    A    <= "01";
+    B    <= "00";
+    c_in <= '1';
+    WAIT FOR time_period;
+    ASSERT ((sum = "10") AND (c_out = '0') AND (compare_result = "100")) --If for A=01 AND B=00, IF S!=10 AND C!=0, then there is an error
+    REPORT "Error for input A_in=01 and B_in=00 " SEVERITY error;
+    ----------------
+    ----------------
     A    <= "10";
+    B    <= "00";
+    c_in <= '0';
+    WAIT FOR time_period;
+    ASSERT ((sum = "10") AND (c_out = '0') AND (compare_result = "100")) --If for A=10 AND B=00, IF S!=00 AND C!=0, then there is an error
+    REPORT "Error for input A_in=10 and B_in=00" SEVERITY error;
+    ----------------
+    ----------------
+    A    <= "11";
+    B    <= "00";
+    c_in <= '1';
+    WAIT FOR time_period;
+    ASSERT ((sum = "00") AND (c_out = '1') AND (compare_result = "100")) --If for A=11 AND B=00, IF S!=00 AND C!=1, then there is an error
+    REPORT "Error for input A_in=11 and B_in=00" SEVERITY error;
+    ----------------
+    -- Testing when B = 01
+    ----------------
+    A    <= "00";
     B    <= "01";
     c_in <= '0';
     WAIT FOR time_period;
-    ASSERT ((sum = "11") AND (c_out = '0') AND (compare_result = "100")) --If for A=00 AND B=00, IF S!=00 AND C!=0, then there is an error
-    REPORT "Error for input A_in=00 and B_in=00 " SEVERITY error;
-    ----------------
-    ----------------
-    A    <= "01";
-    B    <= "11";
-    c_in <= '0';
-    WAIT FOR time_period;
-    ASSERT ((sum = "00") AND (c_out = '1') AND (compare_result = "001")) --If for A=00 AND B=00, IF S!=00 AND C!=0, then there is an error
-    REPORT "Error for input A_in=00 and B_in=00" SEVERITY error;
+    ASSERT ((sum = "01") AND (c_out = '0') AND (compare_result = "001")) --If for A=00 AND B=01, IF S!=01 AND C!=0, then there is an error
+    REPORT "Error for input A_in=00 and B_in=01" SEVERITY error;
     ----------------
     ----------------
     A    <= "01";
     B    <= "01";
     c_in <= '1';
     WAIT FOR time_period;
-    ASSERT ((sum = "11") AND (c_out = '0') AND (compare_result = "010")) --If for A=00 AND B=00, IF S!=00 AND C!=0, then there is an error
+    ASSERT ((sum = "11") AND (c_out = '0') AND (compare_result = "010")) --If for A=01 AND B=01, IF S!=11 AND C!=0, then there is an error
+    REPORT "Error for input A_in=01 and B_in=01" SEVERITY error;
+    ----------------
+    ----------------
+    A    <= "10";
+    B    <= "01";
+    c_in <= '0';
+    WAIT FOR time_period;
+    ASSERT ((sum = "11") AND (c_out = '0') AND (compare_result = "100")) --If for A=10 AND B=01, IF S!=11 AND C!=0, then there is an error
+    REPORT "Error for input A_in=10 and B_in=01" SEVERITY error;
+    ----------------
+    ----------------
+    A    <= "11";
+    B    <= "01";
+    c_in <= '1';
+    WAIT FOR time_period;
+    ASSERT ((sum = "01") AND (c_out = '1') AND (compare_result = "100")) --If for A=11 AND B=01, IF S!=01 AND C!=1, then there is an error
+    REPORT "Error for input A_in=11 and B_in=01" SEVERITY error;
+    ----------------
+    -- Testing when B = 10
+    ----------------
+    A    <= "00";
+    B    <= "10";
+    c_in <= '0';
+    WAIT FOR time_period;
+    ASSERT ((sum = "10") AND (c_out = '0') AND (compare_result = "001")) --If for A=00 AND B=10, IF S!=10 AND C!=0, then there is an error
+    REPORT "Error for input A_in=00 and B_in=10" SEVERITY error;
+    ----------------
+    ----------------
+    A    <= "01";
+    B    <= "10";
+    c_in <= '1';
+    WAIT FOR time_period;
+    ASSERT ((sum = "00") AND (c_out = '1') AND (compare_result = "001")) --If for A=01 AND B=10, IF S!=00 AND C!=0, then there is an error
+    REPORT "Error for input A_in=01 and B_in=10 " SEVERITY error;
+    ----------------
+    ----------------
+    A    <= "10";
+    B    <= "10";
+    c_in <= '0';
+    WAIT FOR time_period;
+    ASSERT ((sum = "00") AND (c_out = '1') AND (compare_result = "010")) --If for A=10 AND B=10, IF S!=00 AND C!=0, then there is an error
+    REPORT "Error for input A_in=10 and B_in=10" SEVERITY error;
+    ----------------
+    ----------------
+    A    <= "11";
+    B    <= "10";
+    c_in <= '1';
+    WAIT FOR time_period;
+    ASSERT ((sum = "10") AND (c_out = '1') AND (compare_result = "100")) --If for A=11 AND B=10, IF S!=00 AND C!=0, then there is an error
     REPORT "Error for input A_in=00 and B_in=00" SEVERITY error;
     ----------------
+    -- Testing when B = 11
+    ----------------
+    A    <= "00";
+    B    <= "11";
+    c_in <= '0';
+    WAIT FOR time_period;
+    ASSERT ((sum = "11") AND (c_out = '0') AND (compare_result = "001")) --If for A=00 AND B=11, IF S!=00 AND C!=0, then there is an error
+    REPORT "Error for input A_in=00 and B_in=00" SEVERITY error;
+    ----------------
+    ----------------
+    A    <= "01";
+    B    <= "11";
+    c_in <= '1';
+    WAIT FOR time_period;
+    ASSERT ((sum = "01") AND (c_out = '1') AND (compare_result = "001")) --If for A=01 AND B=11, IF S!=00 AND C!=0, then there is an error
+    REPORT "Error for input A_in=00 and B_in=00 " SEVERITY error;
+    ----------------
+    ----------------
+    A    <= "10";
+    B    <= "11";
+    c_in <= '0';
+    WAIT FOR time_period;
+    ASSERT ((sum = "01") AND (c_out = '1') AND (compare_result = "001")) --If for A=10 AND B=11, IF S!=00 AND C!=0, then there is an error
+    REPORT "Error for input A_in=00 and B_in=00" SEVERITY error;
+    ----------------
+    ----------------
+    A    <= "11";
+    B    <= "11";
+    c_in <= '1';
+    WAIT FOR time_period;
+    ASSERT ((sum = "11") AND (c_out = '1') AND (compare_result = "010")) --If for A=11 AND B=11, IF S!=00 AND C!=0, then there is an error
+    REPORT "Error for input A_in=00 and B_in=00" SEVERITY error;
+    ----------------
+
     finish;
   END PROCESS;
 
