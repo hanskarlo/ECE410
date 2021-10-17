@@ -14,11 +14,14 @@ SIM_DIR=simulation
 
 .PHONY: clean
 
+# Do everything
 all: clean build run
 
+# Delete extra files
 clean:
 	@rm -rf $(WORK_DIR)
 
+# Compiles VHDL
 build:
 	@mkdir -p $(WORK_DIR)
 
@@ -30,5 +33,13 @@ endif
 	@$(GHDL) -i $(GHDL_FLAGS) --workdir=$(WORK_DIR) --work=work $(TB_DIR)/$(TESTBENCH)_tb$(VHDL_EXT) $(SRC_DIR)
 	@$(GHDL) -m $(GHDL_FLAGS) --workdir=$(WORK_DIR) --work=work $(TESTBENCH)_tb
 
+# Run Simulator
 run:
+	@mkdir -p $(SIM_DIR)
+
+ifeq ($(strip $(TESTBENCH)),)
+	@echo "TESTBENCH not set. Use TESTBENCH=<value> to set it."
+	@exit 1
+endif
+
 	@$(GHDL) -r $(GHDL_FLAGS) --workdir=$(WORK_DIR) $(TESTBENCH)_tb --vcd=$(SIM_DIR)/$(TESTBENCH)_tb.vcd
