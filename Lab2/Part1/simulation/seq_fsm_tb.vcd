@@ -1,0 +1,172 @@
+$date
+  Thu Oct 28 20:30:58 2021
+$end
+$version
+  GHDL v0
+$end
+$timescale
+  1 fs
+$end
+$scope module standard $end
+$upscope $end
+$scope module textio $end
+$upscope $end
+$scope module std_logic_1164 $end
+$upscope $end
+$scope module env $end
+$upscope $end
+$scope module seq_fsm_tb $end
+$var reg 1 ! clk_design $end
+$var reg 1 " rst $end
+$var reg 1 # sequence_in $end
+$var reg 1 $ fsm_detector_out $end
+$scope module fsm_seq $end
+$var reg 1 % clk $end
+$var reg 1 & reset $end
+$var reg 1 ' seq_in $end
+$var reg 1 ( output_detect $end
+$var reg 1 ) clk_o $end
+$comment state_reg is not handled $end
+$comment state_next is not handled $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+0!
+0"
+0#
+0$
+0%
+0&
+0'
+0(
+U)
+#20000000
+1!
+1%
+#40000000
+0!
+1#
+0%
+1'
+#60000000
+1!
+1%
+#80000000
+0!
+0%
+#100000000
+1!
+1%
+#120000000
+0!
+0#
+0%
+0'
+#140000000
+1!
+1%
+#160000000
+0!
+0%
+#180000000
+1!
+1%
+#200000000
+0!
+1#
+0%
+1'
+#220000000
+1!
+1%
+#240000000
+0!
+0#
+0%
+0'
+#260000000
+1!
+1%
+#280000000
+0!
+1#
+0%
+1'
+#300000000
+1!
+1%
+#320000000
+0!
+0#
+0%
+0'
+#340000000
+1!
+1%
+#360000000
+0!
+0%
+#380000000
+1!
+1%
+#400000000
+0!
+1#
+0%
+1'
+#420000000
+1!
+1%
+#440000000
+0!
+0%
+#460000000
+1!
+1%
+#480000000
+0!
+0%
+#500000000
+1!
+1%
+#520000000
+0!
+0#
+0%
+0'
+#540000000
+1!
+1%
+#560000000
+0!
+1#
+0%
+1'
+#580000000
+1!
+1$
+1%
+1(
+#600000000
+0!
+0%
+#620000000
+1!
+0$
+1%
+0(
+#640000000
+0!
+0#
+0%
+0'
+#660000000
+1!
+1%
+#680000000
+0!
+0%
+#700000000
+1!
+1%

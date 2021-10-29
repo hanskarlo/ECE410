@@ -24,9 +24,9 @@ USE IEEE.STD_LOGIC_1164.ALL;
 
 ENTITY seq_fsm IS
   PORT (
-    clk : IN STD_LOGIC;
-    reset : IN STD_LOGIC;
-    seq_in : IN STD_LOGIC;
+    clk           : IN STD_LOGIC;
+    reset         : IN STD_LOGIC;
+    seq_in        : IN STD_LOGIC;
     output_detect : OUT STD_LOGIC);
 END seq_fsm;
 
@@ -77,53 +77,53 @@ BEGIN
     CASE state_reg IS
       WHEN A =>
         IF seq_in = '0' THEN
-          state_next <= A;
+          state_next    <= A;
           output_detect <= '0';
         ELSE
-          state_next <= B;
+          state_next    <= B;
           output_detect <= '0';
         END IF;
 
         --- Add the remaining cases for other states here!
       WHEN B =>
         IF seq_in = '0' THEN
-          state_next <= A;
+          state_next    <= A;
           output_detect <= '0';
         ELSE
-          state_next <= C;
+          state_next    <= C;
           output_detect <= '0';
         END IF;
 
       WHEN C =>
         IF seq_in = '0' THEN
-          state_next <= D;
+          state_next    <= D;
           output_detect <= '0';
         ELSE
-          state_next <= C;
+          state_next    <= C;
           output_detect <= '0';
         END IF;
 
       WHEN D =>
         IF seq_in = '0' THEN
-          state_next <= A;
+          state_next    <= A;
           output_detect <= '0';
         ELSE
-          state_next <= E;
+          state_next    <= E;
           output_detect <= '0';
         END IF;
 
       WHEN E =>
         IF seq_in = '0' THEN
-          state_next <= A;
+          state_next    <= A;
           output_detect <= '0';
         ELSE
-          state_next <= C;
+          state_next    <= C;
           output_detect <= '1';
         END IF;
 
       WHEN OTHERS =>
-        state_next <= A;
-        output_detect <= '1';
+        state_next    <= A;
+        output_detect <= '0';
 
     END CASE;
   END PROCESS;

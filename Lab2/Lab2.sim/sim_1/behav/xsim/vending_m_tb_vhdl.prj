@@ -1,0 +1,9 @@
+# compile vhdl design source files
+vhdl2008 xil_defaultlib  \
+"../../../../Part2/src/vending_m.vhd" \
+
+vhdl xil_defaultlib  \
+"../../../../Part2/test/vending_m_tb.vhd" \
+
+# Do not sort compile order
+nosort

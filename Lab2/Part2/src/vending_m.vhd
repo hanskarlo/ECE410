@@ -55,10 +55,11 @@ ARCHITECTURE Behavioral OF vending_m IS
   ---------------------------------------------
   -- *** Add the clk_divider component here
   -- Remember, you want to add this component here and then use it later when you wish to have the divided clock by a factor of 62500000
-  component clk_divider is 
-    port(  clk_in  : IN STD_LOGIC;
-           clk_out : OUT STD_LOGIC);
-  end component; 
+  COMPONENT clk_divider IS
+    PORT (
+      clk_in  : IN STD_LOGIC;
+      clk_out : OUT STD_LOGIC);
+  END COMPONENT;
   ---------------------------------------------
 
   SIGNAL clk_o : STD_LOGIC;
@@ -77,9 +78,10 @@ BEGIN
 
   ---------------------------------------------
   -- *** port map the clk_divider here
-clkdiv : clk_divider
-port map (clk_in  => clk, 
-          clk_out => clk_o);
+  clkdiv : clk_divider
+  PORT MAP(
+    clk_in  => clk,
+    clk_out => clk_o);
   ---------------------------------------------
 
   select_segment <= '0'; -- you may use either the left or the right seven segment.
@@ -121,10 +123,11 @@ port map (clk_in  => clk,
         -- for example, if the coins inserted is "10" i.e., 2$, go to state sum_2.
 
         CASE coins_in IS
-          WHEN "00" => next_state <= sum_0;
-          WHEN "01" => next_state <= sum_1;
-          WHEN "10" => next_state <= sum_2;
-          WHEN "11" => next_state <= sum_3;
+          WHEN "00"   => next_state   <= sum_0;
+          WHEN "01"   => next_state   <= sum_1;
+          WHEN "10"   => next_state   <= sum_2;
+          WHEN "11"   => next_state   <= sum_3;
+          WHEN OTHERS => next_state <= sum_0;
         END CASE;
         ---------------------------------------------
 
@@ -147,10 +150,11 @@ port map (clk_in  => clk,
         -- In this case inside sum_2, you now want to return if any change and then dispense the soft drink.
         -- Make sure, from "sum_2" to "sum_6", you also take care to even check if item_sel=0 or item_sel=1 and update the state accordingly. 
         CASE coins_in IS
-          WHEN "00" => next_state <= sum_1;
-          WHEN "01" => next_state <= sum_2;
-          WHEN "10" => next_state <= sum_3;
-          WHEN "11" => next_state <= sum_4;
+          WHEN "00"   => next_state   <= sum_1;
+          WHEN "01"   => next_state   <= sum_2;
+          WHEN "10"   => next_state   <= sum_3;
+          WHEN "11"   => next_state   <= sum_4;
+          WHEN OTHERS => next_state <= sum_1;
         END CASE;
         ---------------------------------------------
 
@@ -173,10 +177,11 @@ port map (clk_in  => clk,
           change_out <= "00";
         ELSE
           CASE coins_in IS
-            WHEN "00" => next_state <= sum_2;
-            WHEN "01" => next_state <= sum_3;
-            WHEN "10" => next_state <= sum_4;
-            WHEN "11" => next_state <= sum_5;
+            WHEN "00"   => next_state   <= sum_2;
+            WHEN "01"   => next_state   <= sum_3;
+            WHEN "10"   => next_state   <= sum_4;
+            WHEN "11"   => next_state   <= sum_5;
+            WHEN OTHERS => next_state <= sum_2;
           END CASE;
         END IF;
         ---------------------------------------------
@@ -200,10 +205,11 @@ port map (clk_in  => clk,
           change_out <= "01";
         ELSE
           CASE coins_in IS
-            WHEN "00" => next_state <= sum_3;
-            WHEN "01" => next_state <= sum_4;
-            WHEN "10" => next_state <= sum_5;
-            WHEN "11" => next_state <= sum_6;
+            WHEN "00"   => next_state   <= sum_3;
+            WHEN "01"   => next_state   <= sum_4;
+            WHEN "10"   => next_state   <= sum_5;
+            WHEN "11"   => next_state   <= sum_6;
+            WHEN OTHERS => next_state <= sum_3;
           END CASE;
         END IF;
         ---------------------------------------------
@@ -220,13 +226,13 @@ port map (clk_in  => clk,
         --*** update the design lines when coins inserted are 00/01/10/11
         -- you may use any conditional assignment format
         -- based on the inserted coins, update the next state
-  
+
         IF (item_sel = '0') THEN
-            next_state <= sum_2;
-            change_out <= "10";
+          next_state <= sum_2;
+          change_out <= "10";
         ELSE
-            next_state <= dispense;
-            change_out <= "00";
+          next_state <= dispense;
+          change_out <= "00";
         END IF;
         ---------------------------------------------
 

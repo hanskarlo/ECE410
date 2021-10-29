@@ -27,25 +27,25 @@ ARCHITECTURE Behavioral OF seq_fsm_tb IS
 
   COMPONENT seq_fsm IS
     PORT (
-      clk : IN STD_LOGIC;
-      reset : IN STD_LOGIC;
-      seq_in : IN STD_LOGIC;
+      clk           : IN STD_LOGIC;
+      reset         : IN STD_LOGIC;
+      seq_in        : IN STD_LOGIC;
       output_detect : OUT STD_LOGIC);
   END COMPONENT;
 
-  SIGNAL clk_design : STD_LOGIC;
-  SIGNAL rst : STD_LOGIC;
-  SIGNAL sequence_in : STD_LOGIC;
+  SIGNAL clk_design       : STD_LOGIC;
+  SIGNAL rst              : STD_LOGIC;
+  SIGNAL sequence_in      : STD_LOGIC;
   SIGNAL fsm_detector_out : STD_LOGIC;
-  CONSTANT clk_period : TIME := 40ns;
+  CONSTANT clk_period     : TIME := 40 ns;
 
 BEGIN
   --*** add the design lines to port map the entity here
   FSM_SEQ : seq_fsm PORT MAP(
-    seq_in => sequence_in,
-    reset => rst,
+    seq_in        => sequence_in,
+    reset         => rst,
     output_detect => fsm_detector_out,
-    clk => clk_design);
+    clk           => clk_design);
   --*** end design lines                               
   clk_process : PROCESS
   BEGIN
@@ -59,7 +59,8 @@ BEGIN
   BEGIN
 
     -- test sequence : "011011010011101100"
-    rst <= '0';
+    rst         <= '0';
+    
     sequence_in <= '0';
     WAIT FOR clk_period;
     sequence_in <= '1';
@@ -76,25 +77,26 @@ BEGIN
     WAIT FOR clk_period;
     sequence_in <= '1';
     WAIT FOR clk_period;
-    sequence_in <= '0';
-    WAIT FOR clk_period;
-    sequence_in <= '0';
-    WAIT FOR clk_period;
-    sequence_in <= '1';
-    WAIT FOR clk_period;
-    sequence_in <= '1';
-    WAIT FOR clk_period;
-    sequence_in <= '1';
-    WAIT FOR clk_period;
-    sequence_in <= '0';
-    WAIT FOR clk_period;
-    sequence_in <= '1';
-    WAIT FOR clk_period;
-    sequence_in <= '1';
-    WAIT FOR clk_period;
-    sequence_in <= '0';
-    WAIT FOR clk_period;
-    sequence_in <= '0';
-    WAIT FOR clk_period;
+--    sequence_in <= '0';
+--    WAIT FOR clk_period;
+--    sequence_in <= '0';
+--    WAIT FOR clk_period;
+--    sequence_in <= '1';
+--    WAIT FOR clk_period;
+--    sequence_in <= '1';
+--    WAIT FOR clk_period;
+--    sequence_in <= '1';
+--    WAIT FOR clk_period;
+--    sequence_in <= '0';
+--    WAIT FOR clk_period;
+--    sequence_in <= '1';
+--    WAIT FOR clk_period;
+--    sequence_in <= '1';
+--    WAIT FOR clk_period;
+--    sequence_in <= '0';
+--    WAIT FOR clk_period;
+--    sequence_in <= '0';
+--    WAIT FOR clk_period;
+--    std.env.finish;
   END PROCESS;
 END Behavioral;
