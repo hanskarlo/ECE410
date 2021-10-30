@@ -1,5 +1,5 @@
 $date
-  Fri Oct 29 17:58:41 2021
+  Sat Oct 30 17:07:14 2021
 $end
 $version
   GHDL v0
@@ -41,11 +41,6 @@ $var reg 1 3 granola_bar $end
 $var reg 1 4 clk_o $end
 $comment present_state is not handled $end
 $comment next_state is not handled $end
-$scope module clkdiv $end
-$var reg 1 5 clk_in $end
-$var reg 1 6 clk_out $end
-$var integer 32 7 count $end
-$upscope $end
 $upscope $end
 $upscope $end
 $enddefinitions $end
@@ -70,90 +65,63 @@ b1111110 0
 02
 03
 U4
-05
-U6
-b1 7
 #20000000
 1!
+b0110000 &
 1+
-15
-b10 7
+b0110000 0
 #40000000
 0!
-b10 $
 0+
-b10 .
-05
 #60000000
 1!
+b1101101 &
 1+
-15
-b11 7
+b1101101 0
 #80000000
 0!
-b11 $
+b00 $
 0+
-b11 .
-05
+b00 .
 #100000000
 1!
+b0111111 &
+1(
 1+
-15
-b100 7
+b0111111 0
+12
 #120000000
 0!
-1#
-b10 $
 0+
-1-
-b10 .
-05
 #140000000
 1!
+b1111110 &
+0(
 1+
-15
-b101 7
+b1111110 0
+02
 #160000000
 0!
 b11 $
 0+
 b11 .
-05
 #180000000
 1!
+b01 %
+b1111001 &
 1+
-15
-b110 7
+b01 /
+b1111001 0
 #200000000
 0!
-b10 $
+b00 $
 0+
-b10 .
-05
+b00 .
+b01 /
 #220000000
 1!
+b00 %
+b1101101 &
 1+
-15
-b111 7
-#240000000
-0!
-b11 $
-0+
-b11 .
-05
-#260000000
-1!
-1+
-15
-b1000 7
-#280000000
-0!
-b01 $
-0+
-b01 .
-05
-#300000000
-1!
-1+
-15
-b1001 7
+b00 /
+b1101101 0
