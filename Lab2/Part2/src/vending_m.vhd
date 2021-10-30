@@ -105,7 +105,7 @@ BEGIN
     END IF;
   END PROCESS;
 
-  PROCESS (present_state, coins_in, clk) --*** complete the sensitivity list
+  PROCESS (present_state, coins_in, item_sel) --*** complete the sensitivity list
   BEGIN
     CASE present_state IS
       WHEN sum_0 =>

@@ -1,6 +1,7 @@
 
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
+USE std.env.finish; 
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -37,8 +38,8 @@ ARCHITECTURE Behavioral OF vending_m_tb IS
   SIGNAL change               : STD_LOGIC_VECTOR(1 DOWNTO 0);
   SIGNAL display              : STD_LOGIC_VECTOR(6 DOWNTO 0);
   SIGNAL segment              : STD_LOGIC;
-  SIGNAL soft_drink_dispense  : STD_LOGIC := '0';
-  SIGNAL granola_bar_dispense : STD_LOGIC := '0';
+  SIGNAL soft_drink_dispense  : STD_LOGIC;
+  SIGNAL granola_bar_dispense : STD_LOGIC;
   SIGNAL dispensed            : STD_LOGIC_VECTOR(1 DOWNTO 0);
 
   CONSTANT clk_period : TIME := 40 ns;
@@ -68,28 +69,17 @@ BEGIN
 
   stim_proc : PROCESS
   BEGIN
-
     rst <= '1';
-
+    wait for clk_period; 
+    
     -- ****Test cases****
     -- Write the series of test cases here to verify the correct working of your design.
     -- Provide the input stimulus to the signals : item_select, coins
     rst <= '0';
-
-    item_select <= '0';  --Setting to get soft drink
-    coins       <= "01"; --Adding 1 Dollar
-    WAIT UNTIL rising_edge(clk_design);
-
-    coins <= "01"; --Adding 2 dollars. Remaining in soft drink
-    WAIT UNTIL rising_edge(clk_design);
-
-    coins <= "00";
-    WAIT UNTIL rising_edge(clk_design);
-
-    ASSERT soft_drink_dispense = '1';
-    REPORT "Soft Drink NOT Dispensed"
-      SEVERITY failure;
-    WAIT UNTIL falling_edge(clk_design);
+    wait for clk_period;
+    
+    
+    
     std.env.finish;
   END PROCESS;
 END Behavioral;
