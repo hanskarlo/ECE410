@@ -53,14 +53,14 @@ END vending_m;
 
 ARCHITECTURE Behavioral OF vending_m IS
   ---------------------------------------------
-  -- *** Add the clk_divider component here
-  -- Remember, you want to add this component here and then use it later when you wish to have the divided clock by a factor of 62500000
-  COMPONENT clk_divider IS
-    PORT (
-      clk_in  : IN STD_LOGIC;
-      clk_out : OUT STD_LOGIC);
-  END COMPONENT;
-  ---------------------------------------------
+--  -- *** Add the clk_divider component here
+--  -- Remember, you want to add this component here and then use it later when you wish to have the divided clock by a factor of 62500000
+--  COMPONENT clk_divider IS
+--    PORT (
+--      clk_in  : IN STD_LOGIC;
+--      clk_out : OUT STD_LOGIC);
+--  END COMPONENT;
+--  ---------------------------------------------
 
   SIGNAL clk_o : STD_LOGIC;
   TYPE state_type IS (sum_0, -- state names represent the total sum of inserted money by the user
@@ -76,13 +76,13 @@ ARCHITECTURE Behavioral OF vending_m IS
 
 BEGIN
 
-  ---------------------------------------------
-  -- *** port map the clk_divider here
-  clkdiv : clk_divider
-  PORT MAP(
-    clk_in  => clk,
-    clk_out => clk_o);
-  ---------------------------------------------
+--  ---------------------------------------------
+--  -- *** port map the clk_divider here
+--  clkdiv : clk_divider
+--  PORT MAP(
+--    clk_in  => clk,
+--    clk_out => clk_o);
+--  ---------------------------------------------
 
   select_segment <= '0'; -- you may use either the left or the right seven segment.
 
@@ -90,14 +90,14 @@ BEGIN
   --  you can replace it with the divided clock signal later on when you add the 'clk_divider' component.
   --  same way, you will need to change the clock signal in the 'elsif' statement inside the process below, later on!
 
-  PROCESS (clk_o, reset)
+  PROCESS (clk, reset)
   BEGIN
     IF (reset = '1') THEN
       ---------------------------------------------
       -- *** write one line of code to update the present state when reset=1
       present_state <= sum_0;
       ---------------------------------------------
-    ELSIF (rising_edge(clk_o)) THEN
+    ELSIF (rising_edge(clk)) THEN
       ---------------------------------------------
       -- *** write one line of code to update the present state
       present_state <= next_state;
@@ -105,7 +105,7 @@ BEGIN
     END IF;
   END PROCESS;
 
-  PROCESS (present_state, coins_in) --*** complete the sensitivity list
+  PROCESS (present_state, coins_in, clk) --*** complete the sensitivity list
   BEGIN
     CASE present_state IS
       WHEN sum_0 =>

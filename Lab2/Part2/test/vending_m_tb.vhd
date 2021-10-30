@@ -37,8 +37,8 @@ ARCHITECTURE Behavioral OF vending_m_tb IS
   SIGNAL change               : STD_LOGIC_VECTOR(1 DOWNTO 0);
   SIGNAL display              : STD_LOGIC_VECTOR(6 DOWNTO 0);
   SIGNAL segment              : STD_LOGIC;
-  SIGNAL soft_drink_dispense  : STD_LOGIC;
-  SIGNAL granola_bar_dispense : STD_LOGIC;
+  SIGNAL soft_drink_dispense  : STD_LOGIC := '0';
+  SIGNAL granola_bar_dispense : STD_LOGIC := '0';
   SIGNAL dispensed            : STD_LOGIC_VECTOR(1 DOWNTO 0);
 
   CONSTANT clk_period : TIME := 40 ns;
@@ -69,29 +69,27 @@ BEGIN
   stim_proc : PROCESS
   BEGIN
 
-    rst <= '0';
+    rst <= '1';
 
     -- ****Test cases****
     -- Write the series of test cases here to verify the correct working of your design.
     -- Provide the input stimulus to the signals : item_select, coins
+    rst <= '0';
+
     item_select <= '0';  --Setting to get soft drink
     coins       <= "01"; --Adding 1 Dollar
-    WAIT FOR clk_period;
-    coins <= "10"; --Adding 2 dollars. Remaining in soft drink
-    WAIT FOR clk_period;
-    coins <= "11";
-    WAIT FOR clk_period;
-    item_select <= '1';
-    coins       <= "10";
-    WAIT FOR clk_period;
-    coins <= "11";
-    WAIT FOR clk_period;
-    coins <= "10";
-    WAIT FOR clk_period;
-    coins <= "11";
-    WAIT FOR clk_period;
-    coins <= "01";
-    WAIT FOR clk_period;
+    WAIT UNTIL rising_edge(clk_design);
+
+    coins <= "01"; --Adding 2 dollars. Remaining in soft drink
+    WAIT UNTIL rising_edge(clk_design);
+
+    coins <= "00";
+    WAIT UNTIL rising_edge(clk_design);
+
+    ASSERT soft_drink_dispense = '1';
+    REPORT "Soft Drink NOT Dispensed"
+      SEVERITY failure;
+    WAIT UNTIL falling_edge(clk_design);
     std.env.finish;
   END PROCESS;
 END Behavioral;
