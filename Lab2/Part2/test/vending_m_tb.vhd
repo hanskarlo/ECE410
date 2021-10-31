@@ -1,4 +1,3 @@
-
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE std.env.finish;
@@ -104,6 +103,38 @@ BEGIN
     ASSERT (soft_drink_dispense = '1')
     REPORT "soft_drink_dispense != 1" SEVERITY failure;
     WAIT UNTIL falling_edge(clk_design);
+
+    item_select <= '1';
+    coins       <= "01";
+    WAIT UNTIL falling_edge(clk_design);
+
+    coins <= "11";
+    WAIT UNTIL falling_edge(clk_design);
+
+    coins <= "00";
+    WAIT UNTIL falling_edge(clk_design);
+
+    ASSERT (granola_bar_dispense = '1')
+    REPORT "granola_bar_dispense != 1" SEVERITY failure;
+    WAIT UNTIL falling_edge(clk_design);
+
+    coins <= "11";
+    WAIT UNTIL falling_edge(clk_design);
+
+    coins <= "11";
+    WAIT UNTIL falling_edge(clk_design);
+
+    ASSERT (change = "10")
+    REPORT "change != 2" SEVERITY failure;
+    WAIT UNTIL falling_edge(clk_design);
+
+    coins <= "00";
+    WAIT UNTIL falling_edge(clk_design);
+
+    ASSERT (granola_bar_dispense = '1')
+    REPORT "granola_bar_dispense != 1" SEVERITY failure;
+    WAIT UNTIL falling_edge(clk_design);
+
     std.env.finish;
   END PROCESS;
 END Behavioral;
