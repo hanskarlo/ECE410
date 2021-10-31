@@ -104,6 +104,7 @@ BEGIN
     REPORT "soft_drink_dispense != 1" SEVERITY failure;
     WAIT UNTIL falling_edge(clk_design);
 
+    -- Testing for when granola bar has been selected
     item_select <= '1';
     coins       <= "01";
     WAIT UNTIL falling_edge(clk_design);
