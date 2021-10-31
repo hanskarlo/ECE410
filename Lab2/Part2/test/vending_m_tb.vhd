@@ -94,13 +94,16 @@ BEGIN
     coins <= "11";
     WAIT UNTIL falling_edge(clk_design);
 
+    ASSERT (change = "01")
+    REPORT "change != 1" SEVERITY failure;
+    WAIT UNTIL falling_edge(clk_design);
+
     coins <= "00";
-    WAIT for 80 ns;
+    WAIT UNTIL falling_edge(clk_design);
 
---    ASSERT (soft_drink_dispense = '1')
---    REPORT "soft_drink_dispense != 1 or change != 1" SEVERITY failure;
---    WAIT UNTIL falling_edge(clk_design);
-
+    ASSERT (soft_drink_dispense = '1')
+    REPORT "soft_drink_dispense != 1" SEVERITY failure;
+    WAIT UNTIL falling_edge(clk_design);
     std.env.finish;
   END PROCESS;
 END Behavioral;
