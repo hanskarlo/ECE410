@@ -119,7 +119,7 @@ BEGIN
             PC_out <= conv_std_logic_vector(PC, 5);
             -- ****************************************
             -- write one line of code to get the 8-bit instruction into IR                      
-            IR <= PM(PC_out);
+            IR <= PM(PC);
             -------------------------------------------
             PC          <= PC + 1;
             muxsel_ctrl <= "00";
@@ -274,7 +274,7 @@ BEGIN
         WHEN SHFL_execute => -- SHFL
           -- *********************************
           -- write the entire state for SHFL_execute 
-          muxsel_ctrl <= "0";
+          muxsel_ctrl <= "00";
           imm_ctrl    <= (OTHERS => '0');
           accwr_ctrl  <= '1';
           rfaddr_ctrl <= IR(2 DOWNTO 0);
@@ -288,7 +288,7 @@ BEGIN
         WHEN SHFR_execute => -- SHFR 
           -- *********************************
           -- write the entire state for SHFR_execute 
-          muxsel_ctrl <= "0";
+          muxsel_ctrl <= "00";
           imm_ctrl    <= (OTHERS => '0');
           accwr_ctrl  <= '0';
           rfaddr_ctrl <= IR(2 DOWNTO 0);

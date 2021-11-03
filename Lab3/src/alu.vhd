@@ -27,8 +27,9 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 -- The following package is needed so that the STD_LOGIC_VECTOR signals
 -- A and B can be used in unsigned arithmetic operations.
-USE IEEE.STD_LOGIC_ARITH.ALL;
-USE ieee.std_logic_unsigned.ALL;
+--USE IEEE.STD_LOGIC_ARITH.ALL;
+USE ieee.std_logic_unsigned.all; 
+--USE IEEE.numeric_std.all; 
 
 ENTITY alu IS PORT (
   clk_alu    : IN STD_LOGIC;
@@ -53,12 +54,12 @@ BEGIN
         WHEN "010" =>
           -- shift left based on "bits_shift"
           -- ***************************************
-          OUT_alu <= inA_alu SLA bits_shift;
+          OUT_alu <= SHL(inA_alu, bits_shift);
 
         WHEN "011" =>
           -- shift right based on "bits_shift"
           -- ***************************************
-          OUT_alu <= inA_alu SRA bits_shift;
+          OUT_alu <= SHR(inA_alu, bits_shift);
 
         WHEN "100" =>
           OUT_alu <= inA_alu + inB_alu;

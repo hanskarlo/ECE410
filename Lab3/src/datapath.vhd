@@ -155,5 +155,5 @@ BEGIN
   --------------------------------------------------------------
   zero_dp     <= '1' WHEN C_muxout = "00000000" ELSE '0';
   positive_dp <= '1' WHEN C_muxout(7) = '0' ELSE '0';
-
+  --TODO : Change to Logic Gates fucker
 END struct;

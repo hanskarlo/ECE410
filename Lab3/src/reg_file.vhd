@@ -47,12 +47,12 @@ BEGIN
       IF (wr_rf = '1') THEN
         -- ********************************************************
         -- write one line code here
-        RF(addr_rf) <= input_rf;
+        RF(CONV_INTEGER(addr_rf)) <= input_rf;
         -----------------------------------------------------------
       ELSE
         -- ********************************************************
         -- write one line of code here
-        output_rf <= RF(addr_rf);
+        output_rf <= RF(CONV_INTEGER (addr_rf));
         -----------------------------------------------------------
       END IF;
     END IF;
