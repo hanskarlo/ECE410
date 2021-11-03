@@ -24,58 +24,51 @@
 -----------------------------
 
 LIBRARY ieee;
-USE ieee.std_logic_1164.all;
+USE ieee.std_logic_1164.ALL;
 -- The following package is needed so that the STD_LOGIC_VECTOR signals
 -- A and B can be used in unsigned arithmetic operations.
-use IEEE.STD_LOGIC_ARITH.ALL;
-USE ieee.std_logic_unsigned.all;
+USE IEEE.STD_LOGIC_ARITH.ALL;
+USE ieee.std_logic_unsigned.ALL;
 
-entity alu is PORT (
-            clk_alu     : IN std_logic;
-            sel_alu     : IN std_logic_vector(2 DOWNTO 0);
-            inA_alu     : IN std_logic_vector(7 DOWNTO 0);
-            inB_alu     : IN std_logic_vector(7 DOWNTO 0);
-            bits_shift  : IN std_logic_vector(1 downto 0);       -- decides how much to shift during shift left and shift right operation (decide from last 2 bits in the SHFL/SHFR operation)
-            OUT_alu     : OUT std_logic_vector (7 DOWNTO 0) := "00000000");
-end alu;
+ENTITY alu IS PORT (
+  clk_alu    : IN STD_LOGIC;
+  sel_alu    : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+  inA_alu    : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+  inB_alu    : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+  bits_shift : IN STD_LOGIC_VECTOR(1 DOWNTO 0); -- decides how much to shift during shift left and shift right operation (decide from last 2 bits in the SHFL/SHFR operation)
+  OUT_alu    : OUT STD_LOGIC_VECTOR (7 DOWNTO 0) := "00000000");
+END alu;
 
 ARCHITECTURE Behavior OF alu IS
-    BEGIN
-        PROCESS(clk_alu  )  -- complete the sensitivity list here! *********************************
-        
-        BEGIN
-        IF clk_alu'event and clk_alu = '1' THEN
-            CASE sel_alu IS
-                WHEN "000" =>   
-                                OUT_alu <= inA_alu;
-                WHEN "001" =>
-                                OUT_alu <= inA_alu AND inB_alu;
-                WHEN "010" =>
-                                -- shift left based on "bits_shift"
-				                
+BEGIN
+  PROCESS (clk_alu) -- complete the sensitivity list here! *********************************
 
+  BEGIN
+    IF clk_alu'event AND clk_alu = '1' THEN
+      CASE sel_alu IS
+        WHEN "000" =>
+          OUT_alu <= inA_alu;
+        WHEN "001" =>
+          OUT_alu <= inA_alu AND inB_alu;
+        WHEN "010" =>
+          -- shift left based on "bits_shift"
+          -- ***************************************
+          OUT_alu <= inA_alu SLA bits_shift;
 
+        WHEN "011" =>
+          -- shift right based on "bits_shift"
+          -- ***************************************
+          OUT_alu <= inA_alu SRA bits_shift;
 
-                                -- ***************************************
-				
-
-                WHEN "011" =>
-                                -- shift right based on "bits_shift"
-                                
-
-
-
-                                -- ***************************************
-				
-                WHEN "100" =>
-                                OUT_alu <= inA_alu + inB_alu;
-                WHEN "101" =>
-                                OUT_alu <= inA_alu - inB_alu;
-                WHEN "110" =>
-                                OUT_alu <= inA_alu + 1;
-                WHEN OTHERS =>
-                                OUT_alu <= inA_alu - 1;               
-            END CASE;
-        END IF;
-        END PROCESS;
+        WHEN "100" =>
+          OUT_alu <= inA_alu + inB_alu;
+        WHEN "101" =>
+          OUT_alu <= inA_alu - inB_alu;
+        WHEN "110" =>
+          OUT_alu <= inA_alu + 1;
+        WHEN OTHERS =>
+          OUT_alu <= inA_alu - 1;
+      END CASE;
+    END IF;
+  END PROCESS;
 END Behavior;

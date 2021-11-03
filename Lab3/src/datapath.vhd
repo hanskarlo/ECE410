@@ -69,7 +69,7 @@ ARCHITECTURE struct OF datapath IS
   END COMPONENT;
 
   COMPONENT alu PORT (
-    clk_alu    : IN STD_LOGIC
+    clk_alu    : IN STD_LOGIC;
     sel_alu    : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
     inA_alu    : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
     inB_alu    : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -95,7 +95,8 @@ BEGIN
     in2_mux => usr_input,
     -- ****************************************
     -- map the remaining signals here for this component
-
+    in1_mux => C_rfout,
+    in0_mux => C_aluout,
     -------------------------------------------
     out_mux => C_muxout);
 
@@ -110,7 +111,8 @@ BEGIN
     clk_rf => clk_dp,
     -- ****************************************
     -- map the remaining signals here for this component
-
+    wr_rf   => rfwr_dp,
+    addr_rf => rfaddr_dp,
     -------------------------------------------
     input_rf  => C_accout,
     output_rf => C_rfout);
@@ -136,9 +138,12 @@ BEGIN
   BEGIN
     IF bits_sel_dp = '1' THEN
       -- write two lines of logic code here
-
+      C_muxout(7 DOWNTO 4) <= usr_input(7 DOWNTO 4);
+      C_accout             <= C_muxout;
     ELSE
-      -- write two lines of logic code here
+      -- write two lines of logic code here 
+      C_muxout(3 DOWNTO 0) <= usr_input(3 DOWNTO 0);
+      C_accout             <= C_muxout;
 
     END IF;
   END PROCESS;
@@ -148,5 +153,7 @@ BEGIN
   -- ***********************************************************
   -- Write two lines for zero flag and positive flag here (hint: these flags are being detected at the output of 4:1 mux)
   --------------------------------------------------------------
+  zero_dp     <= '1' WHEN C_muxout = "00000000" ELSE '0';
+  positive_dp <= '1' WHEN C_muxout(7) = '0' ELSE '0';
 
 END struct;
