@@ -119,7 +119,7 @@ BEGIN
             PC_out <= conv_std_logic_vector(PC, 5);
             -- ****************************************
             -- write one line of code to get the 8-bit instruction into IR                      
-            IR <= PM_BLOCK(PC_out);
+            IR <= PM(PC_out);
             -------------------------------------------
             PC          <= PC + 1;
             muxsel_ctrl <= "00";
@@ -193,7 +193,15 @@ BEGIN
         WHEN LDA_execute => -- LDA 
           -- *********************************
           -- write the entire state for LDA_execute
-
+          muxsel_ctrl <= "01";
+          imm_ctrl    <= (OTHERS => '0');
+          accwr_ctrl  <= '1';
+          rfaddr_ctrl <= IR(2 DOWNTO 0);
+          rfwr_ctrl   <= '0';
+          alusel_ctrl <= "000";
+          outen_ctrl  <= '0';
+          done        <= '0';
+          state       <= Fetch;
           ------------------------------------
 
         WHEN STA_execute => -- STA 
@@ -210,35 +218,87 @@ BEGIN
         WHEN LDI_execute => -- LDI 
           -- *********************************
           -- write the entire state for LDI_execute
-
+          muxsel_ctrl <= "11";
+          imm_ctrl    <= PM(PC);
+          accwr_ctrl  <= '0';
+          rfaddr_ctrl <= IR(2 DOWNTO 0);
+          rfwr_ctrl   <= '1';
+          alusel_ctrl <= "000";
+          outen_ctrl  <= '0';
+          done        <= '0';
+          state       <= Fetch;
           ------------------------------------
 
         WHEN JZ_execute => -- JZ
           -- *********************************
           -- write the entire state for JZ_execute 
-
+          muxsel_ctrl <= "00";
+          imm_ctrl    <= (OTHERS => '0');
+          accwr_ctrl  <= '0';
+          rfaddr_ctrl <= "000";
+          rfwr_ctrl   <= '0';
+          alusel_ctrl <= "000";
+          outen_ctrl  <= '0';
+          done        <= '0';
+          state       <= flag_state WHEN zero_flag = '1' ELSE Fetch;
           ------------------------------------
+
         WHEN ADD_execute => -- ADD 
           -- *********************************
           -- write the entire state for ADD_execute 
-
+          muxsel_ctrl <= "00";
+          imm_ctrl    <= (OTHERS => '0');
+          accwr_ctrl  <= '1';
+          rfaddr_ctrl <= IR(2 DOWNTO 0);
+          rfwr_ctrl   <= '0';
+          alusel_ctrl <= "100";
+          outen_ctrl  <= '0';
+          done        <= '0';
+          state       <= Fetch;
           ------------------------------------
 
         WHEN SUB_execute => -- SUB 
           -- *********************************
           -- write the entire state for SUB_execute 
-
+          muxsel_ctrl <= "00";
+          imm_ctrl    <= (OTHERS => '0');
+          accwr_ctrl  <= '1';
+          rfaddr_ctrl <= IR(2 DOWNTO 0);
+          rfwr_ctrl   <= '0';
+          alusel_ctrl <= "101";
+          outen_ctrl  <= '0';
+          done        <= '0';
+          state       <= Fetch;
           ------------------------------------
+
         WHEN SHFL_execute => -- SHFL
           -- *********************************
           -- write the entire state for SHFL_execute 
-
+          muxsel_ctrl <= "0";
+          imm_ctrl    <= (OTHERS => '0');
+          accwr_ctrl  <= '1';
+          rfaddr_ctrl <= IR(2 DOWNTO 0);
+          rfwr_ctrl   <= '0';
+          alusel_ctrl <= "010";
+          outen_ctrl  <= '0';
+          done        <= '0';
+          state       <= Fetch;
           ------------------------------------
+
         WHEN SHFR_execute => -- SHFR 
           -- *********************************
           -- write the entire state for SHFR_execute 
-
+          muxsel_ctrl <= "0";
+          imm_ctrl    <= (OTHERS => '0');
+          accwr_ctrl  <= '0';
+          rfaddr_ctrl <= IR(2 DOWNTO 0);
+          rfwr_ctrl   <= '0';
+          alusel_ctrl <= "011";
+          outen_ctrl  <= '0';
+          done        <= '0';
+          state       <= Fetch;
           ------------------------------------
+
         WHEN input_A => -- INA
           muxsel_ctrl  <= "10";
           imm_ctrl     <= (OTHERS => '0');
@@ -250,11 +310,20 @@ BEGIN
           done         <= '0';
           state        <= flag_state;
           bit_sel_ctrl <= IR(0);
+          -------------------------------------
 
         WHEN output_A => -- OUTA
           -- *********************************
           -- write the entire state for output_A
-
+          muxsel_ctrl <= "00";
+          imm_ctrl    <= (OTHERS => '0');
+          accwr_ctrl  <= '0';
+          rfaddr_ctrl <= "000";
+          rfwr_ctrl   <= '0';
+          alusel_ctrl <= "000";
+          outen_ctrl  <= '1';
+          done        <= '0';
+          state       <= Fetch;
           ------------------------------------
 
         WHEN Halt_cpu => -- HALT
