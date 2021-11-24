@@ -118,7 +118,7 @@ BEGIN
       "00000000",
       "00000000"
     );
-    -- 
+
     -- To decode the 4 MSBs from the PC content
     VARIABLE OPCODE : STD_LOGIC_VECTOR(3 DOWNTO 0);
 
@@ -254,9 +254,10 @@ BEGIN
           -- write the entire state for LDI_execute
           muxsel_ctrl <= "11";
           imm_ctrl <= PM(PC);
+          PC <= PC + 1;
           accwr_ctrl <= '1';
           rfaddr_ctrl <= "000";
-          rfwr_ctrl <= '1';
+          rfwr_ctrl <= '0';
           alusel_ctrl <= "000";
           outen_ctrl <= '0';
           done <= '0';
@@ -278,7 +279,7 @@ BEGIN
           IF zero_flag = '1' THEN
             -- If input is zero, jump to next instruction
             -- address, given by the next byte in PM
-            PC <= CONV_INTEGER(IR) - 1;
+            PC <= CONV_INTEGER(imm_ctrl);
           ELSE
             PC <= PC + 1;
           END IF;
@@ -333,7 +334,7 @@ BEGIN
           -- write the entire state for SHFR_execute 
           muxsel_ctrl <= "00";
           imm_ctrl <= (OTHERS => '0');
-          accwr_ctrl <= '0';
+          accwr_ctrl <= '1';
           rfaddr_ctrl <= IR(2 DOWNTO 0);
           rfwr_ctrl <= '0';
           alusel_ctrl <= "011";

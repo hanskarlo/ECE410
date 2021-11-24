@@ -28,21 +28,21 @@ USE ieee.std_logic_1164.ALL;
 -- The following package is needed so that the STD_LOGIC_VECTOR signals
 -- A and B can be used in unsigned arithmetic operations.
 --USE IEEE.STD_LOGIC_ARITH.ALL;
-USE ieee.std_logic_unsigned.all; 
+USE ieee.std_logic_unsigned.ALL;
 --USE IEEE.numeric_std.all; 
 
 ENTITY alu IS PORT (
-  clk_alu    : IN STD_LOGIC;
-  sel_alu    : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
-  inA_alu    : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-  inB_alu    : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+  clk_alu : IN STD_LOGIC;
+  sel_alu : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+  inA_alu : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+  inB_alu : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
   bits_shift : IN STD_LOGIC_VECTOR(1 DOWNTO 0); -- decides how much to shift during shift left and shift right operation (decide from last 2 bits in the SHFL/SHFR operation)
-  OUT_alu    : OUT STD_LOGIC_VECTOR (7 DOWNTO 0) := "00000000");
+  OUT_alu : OUT STD_LOGIC_VECTOR (7 DOWNTO 0) := "00000000");
 END alu;
 
 ARCHITECTURE Behavior OF alu IS
 BEGIN
-  PROCESS (clk_alu) -- complete the sensitivity list here! *********************************
+  PROCESS (clk_alu, sel_alu, bits_shift, inA_alu, inB_alu) -- complete the sensitivity list here! *********************************
 
   BEGIN
     IF clk_alu'event AND clk_alu = '1' THEN

@@ -35,10 +35,10 @@ USE IEEE.STD_LOGIC_UNSIGNED.ALL;
 --use UNISIM.VComponents.all;
 
 ENTITY accum IS PORT (
-  clk_acc    : IN STD_LOGIC;
-  rst_acc    : IN STD_LOGIC; -- clear signal to reset the accumulator
-  wr_acc     : IN STD_LOGIC; -- this signal goes high whenever you want to write into the accumulator register
-  input_acc  : IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+  clk_acc : IN STD_LOGIC;
+  rst_acc : IN STD_LOGIC; -- clear signal to reset the accumulator
+  wr_acc : IN STD_LOGIC; -- this signal goes high whenever you want to write into the accumulator register
+  input_acc : IN STD_LOGIC_VECTOR (7 DOWNTO 0);
   output_acc : OUT STD_LOGIC_VECTOR (7 DOWNTO 0));
 
 END accum;
@@ -46,7 +46,7 @@ END accum;
 ARCHITECTURE Behavioral OF accum IS
 
 BEGIN
-  PROCESS (clk_acc, rst_acc)
+  PROCESS (clk_acc, rst_acc, wr_acc, input_acc)
 
   BEGIN
     IF rst_acc = '1' THEN

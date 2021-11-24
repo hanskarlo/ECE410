@@ -92,7 +92,7 @@ BEGIN
   U0 : mux4 PORT MAP(
     sel_mux => muxsel_dp,
     in3_mux => imm_dp,
-    in2_mux => usr_input,
+    in2_mux => input_dp,
     -- ****************************************
     -- map the remaining signals here for this component
     in1_mux => C_rfout,
@@ -138,13 +138,10 @@ BEGIN
   BEGIN
     IF bits_sel_dp = '1' THEN
       -- write two lines of logic code here
-      C_muxout(7 DOWNTO 4) <= usr_input(7 DOWNTO 4);
-      C_accout <= C_muxout;
+      usr_input(7 DOWNTO 4) <= input_dp(7 DOWNTO 4);
     ELSE
       -- write two lines of logic code here 
-      C_muxout(3 DOWNTO 0) <= usr_input(3 DOWNTO 0);
-      C_accout <= C_muxout;
-
+      usr_input(3 DOWNTO 0) <= input_dp(3 DOWNTO 0);
     END IF;
   END PROCESS;
 
