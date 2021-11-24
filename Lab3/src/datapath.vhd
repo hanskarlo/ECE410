@@ -153,6 +153,6 @@ BEGIN
   -- ***********************************************************
   -- Write two lines for zero flag and positive flag here (hint: these flags are being detected at the output of 4:1 mux)
   --------------------------------------------------------------
-  zero_dp <= C_muxout(0) XOR C_muxout(1) XOR C_muxout(2) XOR C_muxout(3) XOR C_muxout(4) XOR C_muxout(5) XOR C_muxout(6) XOR C_muxout(7);
+  zero_dp <= NOR C_muxout;
   positive_dp <= NOT C_muxout(7);
 END struct;

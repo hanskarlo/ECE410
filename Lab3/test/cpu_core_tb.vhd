@@ -88,13 +88,15 @@ BEGIN
     -- provide the required input stimulus here for the design under test
 
     ----------------------------------- Part-1
+    rst_tb <= '1';
+    enter <= '0';
+    WAIT FOR clk_period;
     rst_tb <= '0';
     enter <= '1';
 
     -- Case 1: user input is zero
-    in_tb <= "10000001";
-    WAIT UNTIL done;
-
+    in_tb <= "00000000";
+    WAIT UNTIL done = '1';
     -- Case 2: user input is nonzero
     -- IN A
     -- in_tb <= "10000000";

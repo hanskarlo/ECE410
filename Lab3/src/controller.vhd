@@ -25,7 +25,7 @@
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.STD_LOGIC_ARITH.ALL;
-USE IEEE.NUMERIC_STD.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 ENTITY controller IS PORT (
   clk_ctrl : IN STD_LOGIC;
@@ -84,7 +84,40 @@ BEGIN
   PROCESS (clk_ctrl, rst_ctrl, zero_ctrl, positive_ctrl) -- complete the sensitivity list ********************************************
 
     -- "PM" is the program memory that holds the instructions to be executed by the CPU 
-    VARIABLE PM : PM_BLOCK;
+    VARIABLE PM : PM_BLOCK := (
+      "10000001", -- IN A (upper)
+      "10000000", -- IN A (lower)
+      "11000000", -- JZ
+      "00000101", -- Address 05
+      "01100010", -- SHFL A (2bit)
+      "10010000", -- OUT A
+      "00110000", -- LDI A
+      "00001010", -- 10
+      "01110001", -- SHFR A
+      "10010000", -- OUT A
+      "10100000", -- HALT
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000",
+      "00000000"
+    );
     -- 
     -- To decode the 4 MSBs from the PC content
     VARIABLE OPCODE : STD_LOGIC_VECTOR(3 DOWNTO 0);
@@ -243,14 +276,14 @@ BEGIN
           done <= '0';
 
           IF zero_flag = '1' THEN
-
             -- If input is zero, jump to next instruction
             -- address, given by the next byte in PM
-            PC <= PC + (TO_INTEGER(IR) - PC);
-            state <= Fetch;
+            PC <= CONV_INTEGER(IR) - 1;
           ELSE
-            state <= Fetch;
+            PC <= PC + 1;
           END IF;
+
+          state <= fetch;
           ------------------------------------
 
         WHEN ADD_execute => -- ADD 
