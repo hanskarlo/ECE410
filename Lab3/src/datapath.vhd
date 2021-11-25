@@ -92,7 +92,7 @@ BEGIN
   U0 : mux4 PORT MAP(
     sel_mux => muxsel_dp,
     in3_mux => imm_dp,
-    in2_mux => input_dp,
+    in2_mux => usr_input,
     -- ****************************************
     -- map the remaining signals here for this component
     in1_mux => C_rfout,

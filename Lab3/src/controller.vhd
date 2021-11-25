@@ -22,114 +22,114 @@
 -- The controller implements the states for each instructions and asserts appropriate control signals for the datapath during every state.
 -- For detailed information on the opcodes and instructions to be executed, refer the lab manual.
 -----------------------------
-LIBRARY IEEE;
-USE IEEE.STD_LOGIC_1164.ALL;
-USE IEEE.STD_LOGIC_ARITH.ALL;
-USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.STD_LOGIC_ARITH.all;
+use IEEE.STD_LOGIC_UNSIGNED.all;
 
-ENTITY controller IS PORT (
-  clk_ctrl : IN STD_LOGIC;
-  rst_ctrl : IN STD_LOGIC;
-  enter : IN STD_LOGIC;
-  muxsel_ctrl : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
-  imm_ctrl : BUFFER STD_LOGIC_VECTOR(7 DOWNTO 0);
-  accwr_ctrl : OUT STD_LOGIC;
-  rfaddr_ctrl : OUT STD_LOGIC_VECTOR(2 DOWNTO 0);
-  rfwr_ctrl : OUT STD_LOGIC;
-  alusel_ctrl : OUT STD_LOGIC_VECTOR(2 DOWNTO 0);
-  outen_ctrl : OUT STD_LOGIC;
-  zero_ctrl : IN STD_LOGIC;
-  positive_ctrl : IN STD_LOGIC;
-  PC_out : OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
-  OP_out : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
+entity controller is port (
+  clk_ctrl : in std_logic;
+  rst_ctrl : in std_logic;
+  enter : in std_logic;
+  muxsel_ctrl : out std_logic_vector(1 downto 0);
+  imm_ctrl : buffer std_logic_vector(7 downto 0);
+  accwr_ctrl : out std_logic;
+  rfaddr_ctrl : out std_logic_vector(2 downto 0);
+  rfwr_ctrl : out std_logic;
+  alusel_ctrl : out std_logic_vector(2 downto 0);
+  outen_ctrl : out std_logic;
+  zero_ctrl : in std_logic;
+  positive_ctrl : in std_logic;
+  PC_out : out std_logic_vector(4 downto 0);
+  OP_out : out std_logic_vector(3 downto 0);
   ---------------------------------------------------
-  bit_sel_ctrl : OUT STD_LOGIC;
-  bits_shift_ctrl : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
+  bit_sel_ctrl : out std_logic;
+  bits_shift_ctrl : out std_logic_vector(1 downto 0);
   ---------------------------------------------------
-  done : OUT STD_LOGIC);
-END controller;
+  done : out std_logic);
+end controller;
 
-ARCHITECTURE Behavior OF controller IS
+architecture Behavior of controller is
 
-  TYPE state_type IS (Fetch, Decode, LDA_execute, STA_execute, LDI_execute, ADD_execute, SUB_execute, SHFL_execute, SHFR_execute,
+  type state_type is (Fetch, Decode, LDA_execute, STA_execute, LDI_execute, ADD_execute, SUB_execute, SHFL_execute, SHFR_execute,
     input_A, output_A, Halt_cpu, JZ_execute, flag_state, ADD_SUB_SL_SR_next);
 
-  SIGNAL state : state_type;
-  SIGNAL IR : STD_LOGIC_VECTOR(7 DOWNTO 0);
-  SIGNAL PC : INTEGER RANGE 0 TO 31;
+  signal state : state_type;
+  signal IR : std_logic_vector(7 downto 0);
+  signal PC : integer range 0 to 31;
   -- Instructions and their opcodes (pre-decided)
-  CONSTANT LDA : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0001";
-  CONSTANT STA : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0010";
-  CONSTANT LDI : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0011";
+  constant LDA : std_logic_vector(3 downto 0) := "0001";
+  constant STA : std_logic_vector(3 downto 0) := "0010";
+  constant LDI : std_logic_vector(3 downto 0) := "0011";
 
-  CONSTANT ADD : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0100";
-  CONSTANT SUB : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0101";
+  constant ADD : std_logic_vector(3 downto 0) := "0100";
+  constant SUB : std_logic_vector(3 downto 0) := "0101";
 
-  CONSTANT SHFL : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0110";
-  CONSTANT SHFR : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0111";
+  constant SHFL : std_logic_vector(3 downto 0) := "0110";
+  constant SHFR : std_logic_vector(3 downto 0) := "0111";
 
-  CONSTANT INA : STD_LOGIC_VECTOR(3 DOWNTO 0) := "1000";
-  CONSTANT OUTA : STD_LOGIC_VECTOR(3 DOWNTO 0) := "1001";
-  CONSTANT HALT : STD_LOGIC_VECTOR(3 DOWNTO 0) := "1010";
+  constant INA : std_logic_vector(3 downto 0) := "1000";
+  constant OUTA : std_logic_vector(3 downto 0) := "1001";
+  constant HALT : std_logic_vector(3 downto 0) := "1010";
 
-  CONSTANT JZ : STD_LOGIC_VECTOR(3 DOWNTO 0) := "1100";
+  constant JZ : std_logic_vector(3 downto 0) := "1100";
 
-  TYPE PM_BLOCK IS ARRAY(0 TO 31) OF STD_LOGIC_VECTOR(7 DOWNTO 0); -- program memory that will store the instructions sequentially from part 1 and part 2 test program
+  type PM_BLOCK is array(0 to 31) of std_logic_vector(7 downto 0); -- program memory that will store the instructions sequentially from part 1 and part 2 test program
 
-BEGIN
+begin
 
   --opcode is kept up-to-date
-  OP_out <= IR(7 DOWNTO 4);
+  OP_out <= IR(7 downto 4);
 
-  PROCESS (clk_ctrl, rst_ctrl, zero_ctrl, positive_ctrl) -- complete the sensitivity list ********************************************
+  process (clk_ctrl, rst_ctrl, zero_ctrl, positive_ctrl) -- complete the sensitivity list ********************************************
 
     -- "PM" is the program memory that holds the instructions to be executed by the CPU 
-    VARIABLE PM : PM_BLOCK := (
-      "10000001", -- IN A (upper)
-      "10000000", -- IN A (lower)
-      "11000000", -- JZ
-      "00000101", -- Address 05
-      "01100010", -- SHFL A (2bit)
-      "10010000", -- OUT A
-      "00110000", -- LDI A
-      "00001010", -- 10
-      "01110001", -- SHFR A
-      "10010000", -- OUT A
-      "10100000", -- HALT
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000",
-      "00000000"
+    variable PM : PM_BLOCK := (--Task 2
+    "10000001", -- IN A (upper)
+    "10000000", -- IN A (lower)
+    "00100000", -- STA R[0], A
+    "00110000", -- LDI A, 15
+    "00001111", -- 15
+    "01000000", -- ADD A, R[0]
+    "10010000", -- OUT A 
+    "10100000", -- HALT
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000",
+    "00000000"
     );
 
     -- To decode the 4 MSBs from the PC content
-    VARIABLE OPCODE : STD_LOGIC_VECTOR(3 DOWNTO 0);
+    variable OPCODE : std_logic_vector(3 downto 0);
 
     -- Zero flag and positive flag
-    VARIABLE zero_flag, positive_flag : STD_LOGIC;
+    variable zero_flag, positive_flag : std_logic;
 
-  BEGIN
-    IF (rst_ctrl = '1') THEN -- RESET initializes all the control signals to 0.
+  begin
+    if (rst_ctrl = '1') then -- RESET initializes all the control signals to 0.
       PC <= 0;
       muxsel_ctrl <= "00";
-      imm_ctrl <= (OTHERS => '0');
+      imm_ctrl <= (others => '0');
       accwr_ctrl <= '0';
       rfaddr_ctrl <= "000";
       rfwr_ctrl <= '0';
@@ -145,10 +145,10 @@ BEGIN
       --                PM(0) := "XXXXXXXX";    
       -- **************
 
-    ELSIF (clk_ctrl'event AND clk_ctrl = '1') THEN
-      CASE state IS
-        WHEN Fetch => -- fetch instruction
-          IF (enter = '1') THEN
+    elsif (clk_ctrl'event and clk_ctrl = '1') then
+      case state is
+        when Fetch => -- fetch instruction
+          if (enter = '1') then
             PC_out <= conv_std_logic_vector(PC, 5);
             -- ****************************************
             -- write one line of code to get the 8-bit instruction into IR                      
@@ -156,7 +156,7 @@ BEGIN
             -------------------------------------------
             PC <= PC + 1;
             muxsel_ctrl <= "00";
-            imm_ctrl <= (OTHERS => '0');
+            imm_ctrl <= (others => '0');
             accwr_ctrl <= '0';
             rfaddr_ctrl <= "000";
             rfwr_ctrl <= '0';
@@ -166,44 +166,44 @@ BEGIN
             zero_flag := zero_ctrl;
             positive_flag := positive_ctrl;
             state <= Decode;
-          ELSIF (enter = '0') THEN
+          elsif (enter = '0') then
             state <= Fetch;
-          END IF;
+          end if;
 
-        WHEN Decode => -- decode instruction
+        when Decode => -- decode instruction
 
-          OPCODE := IR(7 DOWNTO 4);
+          OPCODE := IR(7 downto 4);
 
-          CASE OPCODE IS
-            WHEN LDA => state <= LDA_execute;
-            WHEN STA => state <= STA_execute;
-            WHEN LDI => state <= LDI_execute;
-            WHEN ADD => state <= ADD_execute;
-            WHEN SUB => state <= SUB_execute;
-            WHEN SHFL => state <= SHFL_execute;
-            WHEN SHFR => state <= SHFR_execute;
-            WHEN INA => state <= input_A;
-            WHEN OUTA => state <= output_A;
-            WHEN HALT => state <= Halt_cpu;
-            WHEN JZ => state <= JZ_execute;
-            WHEN OTHERS => state <= Halt_cpu;
+          case OPCODE is
+            when LDA => state <= LDA_execute;
+            when STA => state <= STA_execute;
+            when LDI => state <= LDI_execute;
+            when ADD => state <= ADD_execute;
+            when SUB => state <= SUB_execute;
+            when SHFL => state <= SHFL_execute;
+            when SHFR => state <= SHFR_execute;
+            when INA => state <= input_A;
+            when OUTA => state <= output_A;
+            when HALT => state <= Halt_cpu;
+            when JZ => state <= JZ_execute;
+            when others => state <= Halt_cpu;
 
-          END CASE;
+          end case;
 
           muxsel_ctrl <= "00";
           imm_ctrl <= PM(PC); --since the PC is incremented here, I am just doing the pre-fetching. Will relax the requirement for PM to be very fast for LDI to work properly.
           accwr_ctrl <= '0';
-          rfaddr_ctrl <= IR(2 DOWNTO 0); --Decode pre-emptively sets up the register file, just to reduce the delay for waiting one more cycle
+          rfaddr_ctrl <= IR(2 downto 0); --Decode pre-emptively sets up the register file, just to reduce the delay for waiting one more cycle
           rfwr_ctrl <= '0';
           alusel_ctrl <= "000";
           outen_ctrl <= '0';
           done <= '0';
           bit_sel_ctrl <= IR(0);
-          bits_shift_ctrl <= IR(1 DOWNTO 0);
+          bits_shift_ctrl <= IR(1 downto 0);
 
-        WHEN flag_state => -- set zero and positive flags and then goto next instruction
+        when flag_state => -- set zero and positive flags and then goto next instruction
           muxsel_ctrl <= "00";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '0';
           rfaddr_ctrl <= "000";
           rfwr_ctrl <= '0';
@@ -214,9 +214,9 @@ BEGIN
           zero_flag := zero_ctrl;
           positive_flag := positive_ctrl;
 
-        WHEN ADD_SUB_SL_SR_next => -- next state TO add, sub,shfl, shfr
+        when ADD_SUB_SL_SR_next => -- next state TO add, sub,shfl, shfr
           muxsel_ctrl <= "00";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '1';
           rfaddr_ctrl <= "000";
           rfwr_ctrl <= '0';
@@ -224,13 +224,13 @@ BEGIN
           outen_ctrl <= '0';
           state <= flag_state;
 
-        WHEN LDA_execute => -- LDA 
+        when LDA_execute => -- LDA 
           -- *********************************
           -- write the entire state for LDA_execute
           muxsel_ctrl <= "01";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '1';
-          rfaddr_ctrl <= IR(2 DOWNTO 0);
+          rfaddr_ctrl <= IR(2 downto 0);
           rfwr_ctrl <= '0';
           alusel_ctrl <= "000";
           outen_ctrl <= '0';
@@ -238,18 +238,18 @@ BEGIN
           state <= Fetch;
           ------------------------------------
 
-        WHEN STA_execute => -- STA 
+        when STA_execute => -- STA 
           muxsel_ctrl <= "00";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '0';
-          rfaddr_ctrl <= IR(2 DOWNTO 0);
+          rfaddr_ctrl <= IR(2 downto 0);
           rfwr_ctrl <= '1';
           alusel_ctrl <= "000";
           outen_ctrl <= '0';
           done <= '0';
           state <= Fetch;
 
-        WHEN LDI_execute => -- LDI 
+        when LDI_execute => -- LDI 
           -- *********************************
           -- write the entire state for LDI_execute
           muxsel_ctrl <= "11";
@@ -264,11 +264,11 @@ BEGIN
           state <= Fetch;
           ------------------------------------
 
-        WHEN JZ_execute => -- JZ
+        when JZ_execute => -- JZ
           -- *********************************
           -- write the entire state for JZ_execute 
           muxsel_ctrl <= "00";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '0';
           rfaddr_ctrl <= "000";
           rfwr_ctrl <= '0';
@@ -276,76 +276,76 @@ BEGIN
           outen_ctrl <= '0';
           done <= '0';
 
-          IF zero_flag = '1' THEN
+          if zero_flag = '1' then
             -- If input is zero, jump to next instruction
             -- address, given by the next byte in PM
             PC <= CONV_INTEGER(imm_ctrl);
-          ELSE
+          else
             PC <= PC + 1;
-          END IF;
+          end if;
 
           state <= fetch;
           ------------------------------------
 
-        WHEN ADD_execute => -- ADD 
+        when ADD_execute => -- ADD 
           -- *********************************
           -- write the entire state for ADD_execute 
           muxsel_ctrl <= "00";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '1';
-          rfaddr_ctrl <= IR(2 DOWNTO 0);
+          rfaddr_ctrl <= IR(2 downto 0);
           rfwr_ctrl <= '0';
           alusel_ctrl <= "100";
           outen_ctrl <= '0';
           done <= '0';
-          state <= Fetch;
+          state <= ADD_SUB_SL_SR_next;
           ------------------------------------
 
-        WHEN SUB_execute => -- SUB 
+        when SUB_execute => -- SUB 
           -- *********************************
           -- write the entire state for SUB_execute 
           muxsel_ctrl <= "00";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '1';
-          rfaddr_ctrl <= IR(2 DOWNTO 0);
+          rfaddr_ctrl <= IR(2 downto 0);
           rfwr_ctrl <= '0';
           alusel_ctrl <= "101";
           outen_ctrl <= '0';
           done <= '0';
-          state <= Fetch;
+          state <= ADD_SUB_SL_SR_next;
           ------------------------------------
 
-        WHEN SHFL_execute => -- SHFL
+        when SHFL_execute => -- SHFL
           -- *********************************
           -- write the entire state for SHFL_execute 
           muxsel_ctrl <= "00";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '1';
-          rfaddr_ctrl <= IR(2 DOWNTO 0);
+          rfaddr_ctrl <= IR(2 downto 0);
           rfwr_ctrl <= '0';
           alusel_ctrl <= "010";
           outen_ctrl <= '0';
           done <= '0';
-          state <= Fetch;
+          state <= ADD_SUB_SL_SR_next;
           ------------------------------------
 
-        WHEN SHFR_execute => -- SHFR 
+        when SHFR_execute => -- SHFR 
           -- *********************************
           -- write the entire state for SHFR_execute 
           muxsel_ctrl <= "00";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '1';
-          rfaddr_ctrl <= IR(2 DOWNTO 0);
+          rfaddr_ctrl <= IR(2 downto 0);
           rfwr_ctrl <= '0';
           alusel_ctrl <= "011";
           outen_ctrl <= '0';
           done <= '0';
-          state <= Fetch;
+          state <= ADD_SUB_SL_SR_next;
           ------------------------------------
 
-        WHEN input_A => -- INA
+        when input_A => -- INA
           muxsel_ctrl <= "10";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '1';
           rfaddr_ctrl <= "000";
           rfwr_ctrl <= '0';
@@ -356,11 +356,11 @@ BEGIN
           bit_sel_ctrl <= IR(0);
           -------------------------------------
 
-        WHEN output_A => -- OUTA
+        when output_A => -- OUTA
           -- *********************************
           -- write the entire state for output_A
           muxsel_ctrl <= "00";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '0';
           rfaddr_ctrl <= "000";
           rfwr_ctrl <= '0';
@@ -370,9 +370,9 @@ BEGIN
           state <= Fetch;
           ------------------------------------
 
-        WHEN Halt_cpu => -- HALT
+        when Halt_cpu => -- HALT
           muxsel_ctrl <= "00";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '0';
           rfaddr_ctrl <= "000";
           rfwr_ctrl <= '0';
@@ -381,9 +381,9 @@ BEGIN
           done <= '1';
           state <= Halt_cpu;
 
-        WHEN OTHERS =>
+        when others =>
           muxsel_ctrl <= "00";
-          imm_ctrl <= (OTHERS => '0');
+          imm_ctrl <= (others => '0');
           accwr_ctrl <= '0';
           rfaddr_ctrl <= "000";
           rfwr_ctrl <= '0';
@@ -391,8 +391,8 @@ BEGIN
           outen_ctrl <= '1';
           done <= '1';
           state <= Halt_cpu;
-      END CASE;
-    END IF;
+      end case;
+    end if;
 
-  END PROCESS;
-END Behavior;
+  end process;
+end Behavior;
